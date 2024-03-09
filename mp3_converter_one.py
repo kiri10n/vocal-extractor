@@ -25,9 +25,9 @@ def main():
     ###
     ### settings start
     ###
-    youtube_url = "https://www.youtube.com/watch?v=vJrSjThYSoY"
+    youtube_url = "https://www.youtube.com/watch?v=gqapT426dWo"
     output_directory = "downloads"
-    file_name = "虹（二宮和也）"
+    file_name = "sandwitch"
     ###
     ### settings end
     ### 
