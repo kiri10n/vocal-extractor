@@ -25,8 +25,8 @@ def video_to_mp3(video_path, mp3_path):
 
 def download_mp4_mp3(video, output_directory):
     youtube_url = "https://www.youtube.com/watch?v=" + video["id"]["videoId"]
-    video_file_name = video["snippet"]["title"][:20] + ".mp4"
-    audio_file_name = video["snippet"]["title"][:20] + ".mp3"
+    video_file_name = video["snippet"]["title"] + ".mp4"
+    audio_file_name = video["snippet"]["title"] + ".mp3"
 
     video_output_path = download_video(youtube_url, output_directory, video_file_name)
     mp3_output_path = os.path.join(output_directory, audio_file_name)
@@ -46,8 +46,8 @@ def main():
     ### settings start
     ###
     output_directory = "downloads"
-    search_words = "Official Music Video OR Official Video"
-    channel_id = "@officialdism1338"
+    search_words = ["Official Music Video", "Official Video"]
+    channel_id = "UC9M4B-fqveLyWPGNdSkam7g"
     ###
     ### settings end
     ### 
@@ -67,10 +67,10 @@ def main():
             maxResults=50
         )
 
-        print("次の動画の音声を(すべてダウンロード/個別にダウンロード/やめる - 1/2/3)")
+        print("次の動画の音声をダウンロードしますか？")
 
         for video in search_response:
-            print("Title:", video["snippet"]["title"][:30])
+            print("Title:", video["snippet"]["title"])
             # print("Video ID:", video["id"]["videoId"])
             # print("Published At:", video["snippet"]["publishedAt"])
             # print("Description:", video["snippet"]["description"])
@@ -78,7 +78,7 @@ def main():
         
         # ユーザーに続行するかどうかを尋ねる
         while True:
-            user_input = input("1/2/3: ").lower()
+            user_input = input("(すべてダウンロード/個別にダウンロード/やめる - 1/2/3): ").lower()
             if user_input == "1":
                 # メイン処理を再度実行するか、あるいは新しい処理を追加する必要がある場合はここに記述します。
                 for _ in tqdm(map(download_mp4_mp3, search_response, output_directory), total=len(search_response)):
@@ -86,9 +86,9 @@ def main():
                 break
             elif user_input == "2":
                 for video in search_response:
-                    print("次の動画をダウンロードしますか？ (はい/いいえ/ダウンロードをやめる - y/n/q)")
-                    print("Title:", video["snippet"]["title"][:30])
-                    user_input = input("y/n/q: ").lower()
+                    print("次の動画をダウンロードしますか？")
+                    print("Title:", video["snippet"]["title"])
+                    user_input = input("(はい/いいえ/ダウンロードをやめる - y/n/q): ").lower()
                     if user_input == "y":
                         download_mp4_mp3(video, output_directory)
                     elif user_input == "n":
