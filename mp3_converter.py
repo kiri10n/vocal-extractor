@@ -1,4 +1,5 @@
 from apiclient.discovery import build
+from googleapiclient.errors import HttpError
 import os
 from dotenv import load_dotenv
 from pytube import YouTube
@@ -56,20 +57,35 @@ def main():
             maxResults=50
         )
 
+        print("次の動画の音声を(すべてダウンロード/個別にダウンロード/やめる - 1/2/3)")
+
         for video in search_response:
-            print("Title:", video["snippet"]["title"])
-            print("Video ID:", video["id"]["videoId"])
-            print("Published At:", video["snippet"]["publishedAt"])
-            print("Description:", video["snippet"]["description"])
-            print("------------------------------------")
+            print("Title:", video["snippet"]["title"][:30])
+            # print("Video ID:", video["id"]["videoId"])
+            # print("Published At:", video["snippet"]["publishedAt"])
+            # print("Description:", video["snippet"]["description"])
+            # print("------------------------------------")
+        
+        # ユーザーに続行するかどうかを尋ねる
+        while True:
+            user_input = input("処理を続行しますか？ (y/n): ").lower()
+            if user_input == "1":
+                # メイン処理を再度実行するか、あるいは新しい処理を追加する必要がある場合はここに記述します。
+                video_output_path = download_video(youtube_url, output_directory)
+                mp3_output_path = os.path.join(output_directory, "audio.mp3")
+                video_to_mp3(video_output_path, mp3_output_path)
+                print(f"Video downloaded and converted to MP3: {mp3_output_path}")
+                break
+            elif user_input == "2":
+                break
+            elif user_input == "3":
+                print("プログラムを終了します。")
+                break
+            else:
+                print("正しい入力をしてください。")
 
     except HttpError as e:
         print("An HTTP error %d occurred:\n%s" % (e.resp.status, e.content))
-
-    video_output_path = download_video(youtube_url, output_directory)
-    mp3_output_path = os.path.join(output_directory, "audio.mp3")
-    video_to_mp3(video_output_path, mp3_output_path)
-    print(f"Video downloaded and converted to MP3: {mp3_output_path}")
 
 if __name__ == "__main__":
     main()
