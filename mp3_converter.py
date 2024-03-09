@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from pytube import YouTube
 import moviepy.editor as mp
+import tqdm
 
 load_dotenv()
 
@@ -11,16 +12,25 @@ YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 YOUTUBE_API_KEY = os.environ["API_KEY"]
 
-def download_video(url, output_directory):
+def download_video(url, output_directory, video_file_name):
     yt = YouTube(url)
     ys = yt.streams.filter(only_audio=False).first()
-    video_output_path = os.path.join(output_directory, "video.mp4")
-    ys.download(output_path=output_directory, filename="video.mp4")
+    video_output_path = os.path.join(output_directory, video_file_name)
+    ys.download(output_path=output_directory, filename=video_file_name)
     return video_output_path
 
 def video_to_mp3(video_path, mp3_path):
     audio_clip = mp.AudioFileClip(video_path)
     audio_clip.write_audiofile(mp3_path)
+
+def download_mp4_mp3(video, output_directory):
+    youtube_url = "https://www.youtube.com/watch?v=" + video["id"]["videoId"]
+    video_file_name = video["snippet"]["title"][:20] + ".mp4"
+    audio_file_name = video["snippet"]["title"][:20] + ".mp3"
+
+    video_output_path = download_video(youtube_url, output_directory, video_file_name)
+    mp3_output_path = os.path.join(output_directory, audio_file_name)
+    video_to_mp3(video_output_path, mp3_output_path)
 
 def search_videos_by_keyword(service, **kwargs):
     results = service.search().list(**kwargs).execute()
@@ -68,15 +78,26 @@ def main():
         
         # ユーザーに続行するかどうかを尋ねる
         while True:
-            user_input = input("処理を続行しますか？ (y/n): ").lower()
+            user_input = input("1/2/3: ").lower()
             if user_input == "1":
                 # メイン処理を再度実行するか、あるいは新しい処理を追加する必要がある場合はここに記述します。
-                video_output_path = download_video(youtube_url, output_directory)
-                mp3_output_path = os.path.join(output_directory, "audio.mp3")
-                video_to_mp3(video_output_path, mp3_output_path)
-                print(f"Video downloaded and converted to MP3: {mp3_output_path}")
+                for _ in tqdm(map(download_mp4_mp3, search_response, output_directory), total=len(search_response)):
+                    pass
                 break
             elif user_input == "2":
+                for video in search_response:
+                    print("次の動画をダウンロードしますか？ (はい/いいえ/ダウンロードをやめる - y/n/q)")
+                    print("Title:", video["snippet"]["title"][:30])
+                    user_input = input("y/n/q: ").lower()
+                    if user_input == "y":
+                        download_mp4_mp3(video, output_directory)
+                    elif user_input == "n":
+                        pass
+                    elif user_input == "q":
+                        exit()
+                    else:
+                        print("正しい入力をしてください。")
+                        continue
                 break
             elif user_input == "3":
                 print("プログラムを終了します。")
