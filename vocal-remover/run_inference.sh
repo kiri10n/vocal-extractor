@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# ./run_inference.sh --input /path/to/folder で実行．
+
 # 引数の解析
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -31,6 +33,6 @@ for file in "$INPUT_PATH"/*.mp3; do
     filename=$(basename -- "$file")
     if [[ ! " ${EXCLUDE_FILES[@]} " =~ " ${filename} " ]]; then
         # 除外ファイルでなければPythonスクリプトを実行
-        python interference.py --input "$file"
+        python inference.py --input "$file"
     fi
 done
