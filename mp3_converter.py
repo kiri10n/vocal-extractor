@@ -25,8 +25,8 @@ def video_to_mp3(video_path, mp3_path):
 
 def download_mp4_mp3(video, output_directory):
     youtube_url = "https://www.youtube.com/watch?v=" + video["id"]["videoId"]
-    video_file_name = video["snippet"]["title"] + ".mp4"
-    audio_file_name = video["snippet"]["title"] + ".mp3"
+    video_file_name = video["snippet"]["title"][:50] + ".mp4"
+    audio_file_name = video["snippet"]["title"][:50] + ".mp3"
 
     video_output_path = download_video(youtube_url, output_directory, video_file_name)
     mp3_output_path = os.path.join(output_directory, audio_file_name)
@@ -70,7 +70,7 @@ def main():
         print("次の動画の音声をダウンロードしますか？")
 
         for video in search_response:
-            print("Title:", video["snippet"]["title"])
+            print("Title:", video["snippet"]["title"][:50])
             # print("Video ID:", video["id"]["videoId"])
             # print("Published At:", video["snippet"]["publishedAt"])
             # print("Description:", video["snippet"]["description"])
@@ -87,7 +87,7 @@ def main():
             elif user_input == "2":
                 for video in search_response:
                     print("次の動画をダウンロードしますか？")
-                    print("Title:", video["snippet"]["title"])
+                    print("Title:", video["snippet"]["title"][:50])
                     user_input = input("(はい/いいえ/ダウンロードをやめる - y/n/q): ").lower()
                     if user_input == "y":
                         download_mp4_mp3(video, output_directory)
