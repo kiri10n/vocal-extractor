@@ -46,7 +46,7 @@ def main():
     ### settings start
     ###
     output_directory = "downloads"
-    search_words = ["Official Music Video", "Official Video"]
+    search_words = "Music|Video"
     channel_id = "UC9M4B-fqveLyWPGNdSkam7g"
     ###
     ### settings end
