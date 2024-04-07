@@ -25,9 +25,9 @@ def main():
     ###
     ### settings start
     ###
-    youtube_url = "https://www.youtube.com/watch?v=gqapT426dWo"
+    youtube_url = "https://www.youtube.com/watch?v=ji99kh-GzTQ"
     output_directory = "downloads"
-    file_name = "sandwitch"
+    file_name = "attitude"
     ###
     ### settings end
     ### 
