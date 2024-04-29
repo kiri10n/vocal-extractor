@@ -1,5 +1,13 @@
-from googleapiclient.errors import HttpError
+#
+# python mp3_converter_one.py "youtube_url" "filename"
+# で実行。filename.mp3, filename.mp4が作成される。
+#
+
 import os
+import sys
+import argparse
+
+from googleapiclient.errors import HttpError
 from dotenv import load_dotenv
 from pytube import YouTube
 import moviepy.editor as mp
@@ -9,6 +17,19 @@ load_dotenv()
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 YOUTUBE_API_KEY = os.environ["API_KEY"]
+
+def get_args():
+    # 準備
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("url", help="Download from this YouTube URL", type=str)
+    parser.add_argument("filename", help="Downloaded file name", type=str)
+
+    # 結果を受ける
+    args = parser.parse_args()
+
+    return(args)
+
 
 def download_video(url, output_directory, video_file_name):
     yt = YouTube(url)
@@ -25,14 +46,17 @@ def main():
     ###
     ### settings start
     ###
-    youtube_url = "https://www.youtube.com/watch?v=ji99kh-GzTQ"
     output_directory = "downloads"
-    file_name = "attitude"
     ###
     ### settings end
     ### 
 
     os.makedirs(output_directory, exist_ok=True)
+
+    # コマンドライン引数からの読み込み
+    args = get_args()
+    youtube_url = args.url
+    file_name = args.filename
 
     if file_name == "":
         print("ファイル名を設定してください．")
