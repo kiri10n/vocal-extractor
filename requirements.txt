@@ -57,7 +57,7 @@ soundfile==0.12.1
 soxr==0.3.7
 sympy==1.12
 threadpoolctl==3.3.0
-torch==2.2.1
+torch==2.8.0
 torchaudio==2.2.1
 torchvision==0.17.1
 tqdm==4.66.2
